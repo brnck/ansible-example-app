@@ -1,0 +1,28 @@
+---
+- name: Provision backyard
+  hosts: all
+  become: true
+  roles:
+    - { role: 'external/ansible-sudo', tags: 'sudo' }
+    - { role: 'external/ansible-users', tags: 'users' }
+    - { role: 'external/dev-sec.ssh-hardening', tags: 'ssh-hardening' }
+    - { role: 'external/ansible-role-firewall', tags: 'firewall' }
+
+- name: Provision gateway servers
+  hosts: gw-group
+  become: true
+  roles:
+    - { role: 'external/ansible-htpasswd', tags: 'htpasswd' }
+    - { role: 'external/ansible-role-nginx', tags: 'nginx' }
+
+- name: Provision python servers
+  hosts: python-group
+  become: true
+  roles:
+    - { role: 'internal/ansible-additional-packages', tags: 'additional-packages' }
+
+- name: Provision example-app web group
+  hosts: example-app-web-group
+  become: true
+  roles:
+    - { role: 'internal/ansible-example-app-deployment', tags: 'deploy' }

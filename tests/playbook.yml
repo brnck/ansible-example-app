@@ -1,0 +1,14 @@
+---
+- name: Ensure dns names are set
+  hosts: all
+  become: yes
+  pre_tasks:
+    - name: ads hosts to host file
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item.line }}"
+      with_items:
+        - { line: '10.240.0.11 gateway' }
+        - { line: '10.240.0.21 example-app-1' }
+        - { line: '10.240.0.22 example-app-2' }
+        - { line: '10.240.0.23 example-app-3' }

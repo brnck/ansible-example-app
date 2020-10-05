@@ -1,0 +1,36 @@
+---
+- name: Ensure app directory exists
+  file:
+    path: "{{ app_path }}"
+    state: directory
+
+- name: Ensure app is present on machine
+  copy:
+    src: "files/example_flask_app/"
+    dest: "{{ app_path }}"
+
+- name: Ensure app dependencies are installed
+  pip:
+    requirements: "{{ app_path }}/requirements.txt"
+    virtualenv: "{{ app_path }}/env"
+    virtualenv_command: "/usr/bin/python3 -m venv"
+
+- name: Ensure wsgi is present
+  template:
+    src: "templates/wsgi.j2"
+    dest: "{{ app_path }}/wsgi.py"
+
+- name: Ensure service is present
+  template:
+    src: "templates/service.j2"
+    dest: "/etc/systemd/system/{{ app_name }}.service"
+
+- name: Ensure service is running
+  systemd:
+    state: started
+    name: "{{ app_name }}"
+
+- name: Enable service is enabled
+  systemd:
+    name: "{{ app_name }}"
+    enabled: yes

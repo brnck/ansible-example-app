@@ -1,0 +1,13 @@
+---
+- src: https://github.com/weareinteractive/ansible-sudo.git
+  version: 1.14.1
+- src: dev-sec.ssh-hardening
+  version: 9.6.0
+- src: https://github.com/weareinteractive/ansible-users.git
+  version: 1.16.0
+- src: https://github.com/geerlingguy/ansible-role-firewall.git
+  version: 2.5.0
+- src: https://github.com/geerlingguy/ansible-role-nginx
+  version: 2.8.0
+- src: https://github.com/weareinteractive/ansible-htpasswd.git
+  version: 1.8.0

@@ -1,0 +1,54 @@
+---
+firewall_allowed_tcp_ports:
+  - "22"
+  - "80"
+
+# Configure firewall rules to only allow incoming traffic to HTTP/HTTPS ports from
+# Cloudflare’s IP’s https://www.cloudflare.com/ips-v4
+# Let's disable FW rules for testing
+# firewall_additional_rules:
+#   - iptables -A INPUT -s 173.245.48.0/20 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 103.21.244.0/22 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 103.22.200.0/22 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 103.31.4.0/22 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 141.101.64.0/18 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 108.162.192.0/18 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 190.93.240.0/20 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 188.114.96.0/20 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 197.234.240.0/22 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 198.41.128.0/17 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 162.158.0.0/15 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 104.16.0.0/12 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 172.64.0.0/13 -p tcp -m multiport --dports 80,443 -j ACCEPT
+#   - iptables -A INPUT -s 131.0.72.0/22 -p tcp -m multiport --dports 80,443 -j ACCEPT
+
+htpasswd:
+  - name: example-app.htpasswd
+    path: /etc/nginx/conf.d/
+    users:
+      - { name: a.berneckas, password: $apr1$93kicmft$Y0tOzyKPIPAgqeQIXSumH., crypt: plaintext }
+      - { name: test, password: $apr1$93kicmft$Y0tOzyKPIPAgqeQIXSumH., crypt: plaintext }
+    mode: "0640"
+    group: www-data
+
+nginx_remove_default_vhost: true
+nginx_upstreams:
+  - name: example-app
+    strategy: "least_conn"
+    keepalive: 16
+    servers:
+      - "example-app-1:8000"
+      - "example-app-2:8000"
+      - "example-app-3:8000"
+
+nginx_vhosts:
+  - listen: "80"
+    server_name: default_server
+    extra_parameters: |
+      auth_basic              "Restricted Access";
+      auth_basic_user_file    /etc/nginx/conf.d/example-app.htpasswd;
+      location / {
+        proxy_pass         http://example-app;
+        proxy_redirect     off;
+        proxy_http_version 1.1;
+      }

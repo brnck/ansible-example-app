@@ -1,0 +1,14 @@
+---
+# Firewall
+firewall_allowed_tcp_ports:
+  - "22"
+
+firewall_additional_rules:
+  - "iptables -A INPUT -s 10.240.0.11/32 -p tcp --dport 8000 -j ACCEPT"
+
+# App deployment
+app_user: "app"
+app_group: "app"
+app_path: "/home/app/src"
+app_port: 8000
+app_name: "app"

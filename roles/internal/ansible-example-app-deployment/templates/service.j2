@@ -1,0 +1,23 @@
+[Unit]
+#  specifies metadata and dependencies
+Description=Gunicorn instance to serve hello_world app
+
+# tells the init system to only start this after the networking target has been reached
+# We will give our regular user account ownership of the process since it owns all of the relevant files
+After=network.target
+
+[Service]
+# Service specify the user and group under which our process will run.
+User={{ app_user | default('app') }}
+Group={{ app_group | default('app') }}
+
+# We'll then map out the working directory and set the PATH environmental variable so that the init system knows where our the executables for the process are located (within our virtual environment).
+WorkingDirectory={{ app_path }}
+Environment="PATH={{ app_path }}/env/bin"
+
+# We'll then specify the commanded to start the service
+ExecStart={{ app_path }}/env/bin/gunicorn --workers 3 --bind 0.0.0.0:{{ app_port }} wsgi:{{ app_name }}
+
+# This will tell systemd what to link this service to if we enable it to start at boot. We want this service to start when the regular multi-user system is up and running:
+[Install]
+WantedBy=multi-user.target

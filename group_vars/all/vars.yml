@@ -1,0 +1,32 @@
+---
+users:
+  # Hash passwords in docker: `docker run -it --rm alpine mkpasswd -m sha512 helloworld`
+  - username: a.berneckas
+    password: "$6$gFjt0YZfqNldF9Tx$xj3xhoCr4.4HFmGZDqe2JG.SUqlFIUcglok39hdd.qmOrls3es79JSv.WwN4Vape4nTL.hVs2xmpsGerFD7VQ1"
+    authorized_keys:
+      - "{{ lookup('file', 'files/public_keys/a_berneckas.pub') }}"
+    shell: /bin/bash
+  # User only for homework demo purposes
+  - username: test
+    password: "$6$M2P7jZvDWI776is/$n2IkJ/afHxGw1AWVLCGWc0/2EZ8B7VJUAprjLdaVLgIgLYKTNzaxeisrE6rO4YgpBP6VgMT/iYafARLrjHI0A." # testtest
+    authorized_keys:
+      - "{{ lookup('file', 'files/public_keys/test_key.pub') }}"
+    shell: /bin/bash
+  - username: app
+    shell: /bin/bash
+
+sudo_users:
+  - {name: a.berneckas, nopasswd: false}
+  - {name: test, users: app, groups: app, nopasswd: false}
+
+# firewall
+firewall_state: started
+firewall_enabled_at_boot: true
+firewall_disable_firewalld: true
+firewall_disable_ufw: true
+firewall_log_dropped_packets: false
+
+firewall_allowed_tcp_ports:
+  - "22"
+
+additional_packages: []

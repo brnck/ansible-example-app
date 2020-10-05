@@ -1,0 +1,14 @@
+---
+gw-group:
+  hosts:
+    gateway:
+
+python-group:
+  children:
+    example-app-web-group:
+
+example-app-web-group:
+  hosts:
+    example-app-1:
+    example-app-2:
+    example-app-3:
