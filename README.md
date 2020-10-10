@@ -1,7 +1,7 @@
 # ansible-example-app
 
 This repository bootstraps environment for python app. Currently it has been optimized for vagrant environment.
-Head over to [Test](#test) to perform task testing. 
+Head over to [Test](#test) to perform task testing.
 
 Current scheme:
 ```
@@ -24,8 +24,7 @@ Accomplished tasks:
 * Use of Nginx as a reverse proxy (See group_vars/gw-group)
 * Use of Gunicorn as a Python WSGI HTTP Server (See roles/internal/ansible-example-app-deployment)
 * Protect all publicly exposed endpoints using basic authentication (See group_vars/gw_group)
-* Configure firewall rules to only allow incoming traffic to HTTP/HTTPS ports from Cloudflare’s IP’s (See group_vars/gw_group).
-It has been commented, so we could perform tests in vagrant. 
+* Configure firewall rules to only allow incoming traffic to HTTP/HTTPS ports from Cloudflare’s IP’s (See group_vars/gw_group). It has been commented, so we could perform tests in vagrant.
 
 Additional tasks:
 
@@ -83,7 +82,7 @@ DISTRIBUTION=stretch vagrant up --provision
 
 Curl gateway
 ```sh
-curl 10.240.0.11     
+curl 10.240.0.11
 <html>
 <head><title>401 Authorization Required</title></head>
 <body bgcolor="white">
@@ -116,7 +115,7 @@ Sudo to app
 ```sh
 test@example-app-3:~$ sudo -iu app
 [sudo] password for test: testtest
-app@example-app-3:~$ 
+app@example-app-3:~$
 ```
 
 Sudo to root
@@ -126,7 +125,7 @@ test@example-app-3:~$ sudo -iu root
 Sorry, user test is not allowed to execute '/bin/bash' as root on example-app-3.
 ```
 
-Destroy 
+Destroy
 ```
 DISTRIBUTION=stretch vagrant destroy -f
 ```
@@ -139,7 +138,7 @@ DISTRIBUTION=buster vagrant up --provision
 
 Curl gateway
 ```sh
-curl 10.240.0.11     
+curl 10.240.0.11
 <html>
 <head><title>401 Authorization Required</title></head>
 <body bgcolor="white">
@@ -172,7 +171,7 @@ Sudo to app
 ```sh
 test@example-app-3:~$ sudo -iu app
 [sudo] password for test: testtest
-app@example-app-3:~$ 
+app@example-app-3:~$
 ```
 
 Sudo to root
@@ -182,7 +181,7 @@ test@example-app-3:~$ sudo -iu root
 Sorry, user test is not allowed to execute '/bin/bash' as root on example-app-3.
 ```
 
-Destroy 
+Destroy
 ```
 DISTRIBUTION=buster vagrant destroy -f
 ```
